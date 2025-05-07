@@ -11,7 +11,7 @@ export const apiRequest = async (url, method, data = null, isAuthRequired = true
   };
 
   try {
-    const response = await fetch(`http://localhost:3000/api${url}`, options);
+    const response = await fetch(`https://book-loan-api-pat.vercel.app/${url}`, options);
     
     if (!response.ok) {
       const errorResponse = await response.json();
