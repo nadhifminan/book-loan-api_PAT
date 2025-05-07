@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+<head><title>Dashboard</title></head>
+<body>
+  <h2>Dashboard</h2>
+  <button onclick="logout()">Logout</button>
+
+  <h3>Daftar Buku</h3>
+  <ul id="bookList"></ul>
+
+  <h3>Pinjam Buku</h3>
+  <form id="borrowForm">
+    <input type="number" id="book_id" placeholder="ID Buku" required /><br>
+    <input type="date" id="borrow_date" required /><br>
+    <input type="date" id="return_date" required /><br>
+    <button type="submit">Pinjam</button>
+  </form>
+
+  <script type="module">
+    import { apiRequest, logout } from '../scripts/api.js';
+
+    async function loadBooks() {
+      const books = await apiRequest('/books');
+      const list = document.getElementById('bookList');
+      list.innerHTML = '';
+      books.forEach(b => {
+        const li = document.createElement('li');
+        li.textContent = `${b.id} - ${b.title}`;
+        list.appendChild(li);
+      });
+    }
+
+    document.getElementById('borrowForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const book_id = parseInt(document.getElementById('book_id').value);
+      const borrow_date = document.getElementById('borrow_date').value;
+      const return_date = document.getElementById('return_date').value;
+    
+      if (new Date(return_date) <= new Date(borrow_date)) {
+        alert('Tanggal pengembalian harus lebih besar dari tanggal peminjaman.');
+        return;
+      }
+    
+      const res = await apiRequest('/borrows', 'POST', {
+        book_id, borrow_date, return_date
+      });
+    
+      if (res.message?.toLowerCase().includes('success')) {
+        alert('Peminjaman berhasil!');
+      } else {
+        alert(`Peminjaman: ${res.message}`);
+      }
+    });
+    
+    
+
+    loadBooks();
+    window.logout = logout;
+  </script>
+</body>
+</html>
