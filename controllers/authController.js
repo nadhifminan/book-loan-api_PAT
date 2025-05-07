@@ -1,4 +1,4 @@
-const bcrypt = require('bcrypt');
+const bcrypt = require('bcryptjs'); // <-- ganti ini
 const jwt = require('jsonwebtoken');
 const userModel = require('../models/userModel');
 require('dotenv').config();
@@ -16,7 +16,7 @@ exports.register = async (req, res) => {
       return res.status(400).json({ message: 'Username already exists' });
     }
 
-    const hashedPassword = await bcrypt.hash(password, 10);
+    const hashedPassword = await bcrypt.hash(password, 10); // tetap sama
     const userId = await userModel.createUser(username, hashedPassword);
 
     res.status(201).json({ message: 'User registered successfully', userId });
@@ -39,7 +39,7 @@ exports.login = async (req, res) => {
       return res.status(400).json({ message: 'Invalid username or password' });
     }
 
-    const isPasswordValid = await bcrypt.compare(password, user.password);
+    const isPasswordValid = await bcrypt.compare(password, user.password); // tetap sama
     if (!isPasswordValid) {
       return res.status(401).json({ message: 'Invalid username or password' });
     }
