@@ -19,4 +19,6 @@ app.use((req, res) => {
   res.status(404).json({ message: 'Endpoint not found' });
 });
 
+// ❌ JANGAN app.listen()
+// ✅ Export app
 module.exports = app;
